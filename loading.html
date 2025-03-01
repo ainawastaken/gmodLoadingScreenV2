@@ -18,7 +18,7 @@
       width: 100%;
       height: 100%;
     }
-    /* Background image – replace URL with your desired image */
+    /* Background image – replace the URL with your preferred image */
     .background {
       position: absolute;
       top: 0;
@@ -35,6 +35,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
+      width: 90%;
     }
     .progress-bar {
       width: 80%;
@@ -58,15 +59,15 @@
 <body>
   <div class="container">
     <div class="background"></div>
-
     <div class="loading-content">
-      <h1>Welcome to Garry's Mod!</h1>
-      <p>Loading... Please wait</p>
+      <h1 id="servername">Server Name</h1>
+      <h2 id="mapname">Map: Unknown</h2>
       <div class="progress-bar">
         <div class="progress" id="progress"></div>
       </div>
+      <p id="status">Loading...</p>
+      <p id="tip">Tip: ...</p>
     </div>
-
     <div class="flag-counter">
       <a href="https://info.flagcounter.com/ZIDA">
         <img src="https://s01.flagcounter.com/count2/ZIDA/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_250/viewers_3/labels_1/pageviews_1/flags_0/percent_0/" 
@@ -74,19 +75,60 @@
       </a>
     </div>
   </div>
-
+  
   <script>
-    // Simulate loading progress – adjust the timing as needed
-    const progressBar = document.getElementById('progress');
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress++;
-      progressBar.style.width = progress + '%';
-      if (progress >= 100) {
-        clearInterval(interval);
-        // Optionally redirect or trigger an event when loading is complete
+    // Function to update the loading status text.
+    function SetStatus(text) {
+      document.getElementById("status").innerText = text;
+    }
+    
+    // Function to update the progress bar.
+    function SetProgress(progress) {
+      // Convert progress (assumed 0 to 1) to a percentage.
+      var percentage = Math.floor(progress * 100);
+      document.getElementById("progress").style.width = percentage + '%';
+    }
+    
+    // Function to update the map name.
+    function SetMapName(map) {
+      document.getElementById("mapname").innerText = "Map: " + map;
+    }
+    
+    // Function to update the server name.
+    function SetServerName(server) {
+      document.getElementById("servername").innerText = server;
+    }
+    
+    // Function to update the tip text.
+    function SetTip(tip) {
+      document.getElementById("tip").innerText = "Tip: " + tip;
+    }
+    
+    // Listen for messages from Garry's Mod.
+    window.addEventListener("message", function(event) {
+      var data = event.data;
+      if (!data.action) return;
+      
+      switch (data.action) {
+        case "SetStatus":
+          SetStatus(data.status);
+          break;
+        case "SetProgress":
+          SetProgress(data.progress);
+          break;
+        case "SetMapName":
+          SetMapName(data.map);
+          break;
+        case "SetServerName":
+          SetServerName(data.server);
+          break;
+        case "SetTip":
+          SetTip(data.tip);
+          break;
+        default:
+          console.log("Unknown action:", data.action);
       }
-    }, 50); // Change 50ms to adjust the speed
+    });
   </script>
 </body>
 </html>
