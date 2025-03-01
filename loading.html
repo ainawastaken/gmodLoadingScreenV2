@@ -1,140 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Garry's Mod Loading Screen</title>
-  <style>
-    html, body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #1a1a1a;
-      color: white;
-      margin: 0;
-      padding: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    /* Background image – replace the URL with your preferred image */
-    .background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('your-background-image.jpg') no-repeat center center;
-      background-size: cover;
-      z-index: -1;
-    }
-    .loading-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      width: 90%;
-    }
-    .progress-bar {
-      width: 80%;
-      height: 30px;
-      border: 2px solid #fff;
-      margin: 20px auto;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    .progress {
-      width: 0%;
-      height: 100%;
-      background: #00ff00;
-    }
-    .flag-counter {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        #loading-bar {
+            width: 50%;
+            height: 20px;
+            background: #444;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #progress {
+            width: 0%;
+            height: 100%;
+            background: #00ccff;
+            transition: width 0.5s;
+        }
+        #mapname, #players, #serverinfo {
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+            document.getElementById("serverinfo").innerText = "Server: " + servername;
+            document.getElementById("mapname").innerText = "Map: " + mapname;
+            document.getElementById("gamemode").innerText = "Gamemode: " + gamemode;
+        }
+
+        function SetStatusChanged(status) {
+            document.getElementById("status").innerText = status;
+        }
+
+        function SetFilesTotal(total) {
+            window.totalFiles = total;
+        }
+
+        function SetFilesNeeded(needed) {
+            let progress = (window.totalFiles - needed) / window.totalFiles * 100;
+            document.getElementById("progress").style.width = progress + "%";
+        }
+    </script>
 </head>
 <body>
-  <div class="container">
-    <div class="background"></div>
-    <div class="loading-content">
-      <h1 id="servername">Server Name</h1>
-      <h2 id="mapname">Map: Unknown</h2>
-      <div class="progress-bar">
-        <div class="progress" id="progress"></div>
-      </div>
-      <p id="status">Loading...</p>
-      <p id="tip">Tip: ...</p>
-    </div>
-    <div class="flag-counter">
-      <a href="https://info.flagcounter.com/ZIDA">
+    <h1>Welcome to the Server!</h1>
+    <div id="serverinfo">Server: Loading...</div>
+    <div id="mapname">Map: Loading...</div>
+    <div id="gamemode">Gamemode: Loading...</div>
+    <div id="status">Status: Connecting...</div>
+    <div id="loading-bar"><div id="progress"></div></div>
+    <a href="https://info.flagcounter.com/ZIDA">
         <img src="https://s01.flagcounter.com/count2/ZIDA/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_250/viewers_3/labels_1/pageviews_1/flags_0/percent_0/" 
              alt="Flag Counter" border="0">
-      </a>
-    </div>
-  </div>
-  
-  <script>
-    // Function to update the loading status text.
-    function SetStatus(text) {
-      document.getElementById("status").innerText = text;
-    }
-    
-    // Function to update the progress bar.
-    function SetProgress(progress) {
-      // Convert progress (assumed 0 to 1) to a percentage.
-      var percentage = Math.floor(progress * 100);
-      document.getElementById("progress").style.width = percentage + '%';
-    }
-    
-    // Function to update the map name.
-    function SetMapName(map) {
-      document.getElementById("mapname").innerText = "Map: " + map;
-    }
-    
-    // Function to update the server name.
-    function SetServerName(server) {
-      document.getElementById("servername").innerText = server;
-    }
-    
-    // Function to update the tip text.
-    function SetTip(tip) {
-      document.getElementById("tip").innerText = "Tip: " + tip;
-    }
-    
-    // Listen for messages from Garry's Mod.
-    window.addEventListener("message", function(event) {
-      var data = event.data;
-      if (!data.action) return;
-      
-      switch (data.action) {
-        case "SetStatus":
-          SetStatus(data.status);
-          break;
-        case "SetProgress":
-          SetProgress(data.progress);
-          break;
-        case "SetMapName":
-          SetMapName(data.map);
-          break;
-        case "SetServerName":
-          SetServerName(data.server);
-          break;
-        case "SetTip":
-          SetTip(data.tip);
-          break;
-        default:
-          console.log("Unknown action:", data.action);
-      }
-    });
-  </script>
+    </a>
 </body>
 </html>
